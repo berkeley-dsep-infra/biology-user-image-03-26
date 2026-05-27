@@ -1,4 +1,4 @@
-FROM us-central1-docker.pkg.dev/ucb-datahub-2018/base-images-repo/base-r-image:c25cdff
+FROM us-central1-docker.pkg.dev/ucb-datahub-2018/base-images-repo/base-r-image:0d6b5ea
 
 USER root
 RUN apt-get update && apt-get install -y tini && rm -rf /var/lib/apt/lists/*
@@ -36,7 +36,7 @@ USER ${NB_USER}
 WORKDIR /home/${NB_USER}
 
 COPY install.R /tmp/install.R
-RUN r /tmp/install.R
+RUN Rscript /tmp/install.R
 
 COPY --chown=${NB_USER}:${NB_USER} bio1b-packages.bash /tmp/
 COPY --chown=${NB_USER}:${NB_USER} ib134-packages.bash /tmp/
