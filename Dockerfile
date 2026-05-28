@@ -22,8 +22,8 @@ COPY --chown=${NB_USER}:${NB_USER} environment.yml /tmp/environment.yml
 
 
 # Update existing /srv/conda/notebook environment with new packages
-RUN mamba env update -n notebook -f /tmp/environment.yml && \
-    mamba clean -afy && rm -rf /tmp/environment.yml
+RUN conda env update -n notebook -f /tmp/environment.yml && \
+    conda clean -afy && rm -rf /tmp/environment.yml
 
 
 USER root
