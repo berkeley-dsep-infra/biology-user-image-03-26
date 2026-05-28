@@ -5,6 +5,7 @@ channels:
 dependencies:
   # Package to allow Jupyter Notebook or JupyterLab applications in one conda env to access other kernels (e.g. qiime2)
   - nb_conda_kernels==2.5.1
+  - syncthing==1.29.7
 
   # Packages from bioconda for IB134L
   - augustus==3.5.0
