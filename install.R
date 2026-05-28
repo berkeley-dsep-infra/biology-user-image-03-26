@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+options(repos = c(CRAN = "https://packagemanager.posit.co/all/__linux__/noble/2026-05-11+Fksl5Ok_"))
 
 # Function to install R packages
 install_packages_with_versions <- function(packages) {
