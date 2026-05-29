@@ -11,18 +11,24 @@ libpoppler-cpp-dev
 
 # R package imager
 libx11-dev
+
+# igraph dependency
 libglpk-dev
-libgmp3-dev
+
+# gmp dependency
+libgmp-dev
+
+# xml2 dependency
 libxml2-dev
 
 # R package units
 libudunits2-dev
 
-# additional R packages 
+# additional R packages
 # https://github.com/berkeley-dsep-infra/datahub/issues/5061
 libgeos-dev
 libproj-dev
-libmysqlclient-dev
+default-libmysqlclient-dev
 libgsl-dev
 libgdal-dev
 libcurl4-dev
