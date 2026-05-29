@@ -1,0 +1,10 @@
+libgsl-dev
+htop
+nano
+tmux
+libglpk-dev
+nodejs
+npm
+ncompress
+pbzip2
+libcurl4-openssl-dev
