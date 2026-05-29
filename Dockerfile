@@ -9,10 +9,11 @@ USER root
 COPY apt.txt /tmp/apt.txt
 
 RUN apt-get update -qq && \
-    apt-get install -y tini && \
     apt-get install -y --no-install-recommends \
+        tini \
         $(grep -v '^\s*#' /tmp/apt.txt | grep -v '^\s*$' | tr '\n' ' ') && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/apt.txt
 
 COPY install.R /tmp/install.R
 RUN Rscript /tmp/install.R
