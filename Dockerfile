@@ -8,7 +8,6 @@ USER root
 # Copy your new apt.txt
 COPY apt.txt /tmp/apt.txt
 
-RUN cat -A /tmp/apt.txt | head -5
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         tini \
