@@ -31,4 +31,3 @@ libproj-dev
 default-libmysqlclient-dev
 libgsl-dev
 libgdal-dev
-libcurl4-dev
