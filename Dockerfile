@@ -8,9 +8,8 @@ USER root
 # Copy your new apt.txt
 COPY apt.txt /tmp/apt.txt
 
-RUN apt-get update -qq && apt-cache show htop && echo "LISTS OK"
 
-RUN apt-get update -qq && \
+RUN apt-get update  && \
     apt-get install -y --no-install-recommends \
         tini \
         $(grep -v '^\s*#' /tmp/apt.txt | grep -v '^\s*$' | tr '\n' ' ') && \
