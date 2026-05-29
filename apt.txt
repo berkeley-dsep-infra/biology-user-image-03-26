@@ -4,7 +4,6 @@ nano
 tmux
 nodejs
 npm
-ncompress
 pbzip2
 
 # R package qpdf
@@ -26,4 +25,4 @@ libproj-dev
 libmysqlclient-dev
 libgsl-dev
 libgdal-dev
-libcurl4-openssl-dev
+libcurl4-dev
