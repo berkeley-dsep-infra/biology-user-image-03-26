@@ -1,7 +1,6 @@
-FROM us-central1-docker.pkg.dev/ucb-datahub-2018/base-images-repo/base-r-image:c25cdff
+FROM us-central1-docker.pkg.dev/ucb-datahub-2018/base-images-repo/base-r-image:0d6b5ea
 
 USER root
-RUN apt-get update && apt-get install -y tini && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
 # System packages
@@ -9,9 +8,15 @@ RUN apt-get update && apt-get install -y tini && rm -rf /var/lib/apt/lists/*
 # Copy your new apt.txt
 COPY apt.txt /tmp/apt.txt
 
-RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends $(grep -v '^#' /tmp/apt.txt) && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/apt.txt
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        tini \
+        $(grep -v '^\s*#' /tmp/apt.txt | grep -v '^\s*$' | tr -d '\r' | tr '\n' ' ') && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/apt.txt
+
+COPY install.R /tmp/install.R
+RUN Rscript /tmp/install.R
 
 # ------------------------------------------------------------
 # Conda / Python packages
@@ -22,8 +27,8 @@ COPY --chown=${NB_USER}:${NB_USER} environment.yml /tmp/environment.yml
 
 
 # Update existing /srv/conda/notebook environment with new packages
-RUN mamba env update -n notebook -f /tmp/environment.yml && \
-    mamba clean -afy && rm -rf /tmp/environment.yml
+RUN conda env update -n notebook -f /tmp/environment.yml && \
+    conda clean -afy && rm -rf /tmp/environment.yml
 
 
 USER root
@@ -35,15 +40,8 @@ COPY --chown=${NB_USER}:${NB_USER} image-tests ${REPO_DIR}/image-tests
 USER ${NB_USER}
 WORKDIR /home/${NB_USER}
 
-COPY install.R /tmp/install.R
-RUN r /tmp/install.R
 
-COPY --chown=${NB_USER}:${NB_USER} bio1b-packages.bash /tmp/
-COPY --chown=${NB_USER}:${NB_USER} ib134-packages.bash /tmp/
 COPY --chown=${NB_USER}:${NB_USER} ccb293-packages.bash /tmp/
-
-RUN bash /tmp/bio1b-packages.bash && rm /tmp/bio1b-packages.bash
-RUN bash /tmp/ib134-packages.bash && rm /tmp/ib134-packages.bash
 RUN bash /tmp/ccb293-packages.bash && rm /tmp/ccb293-packages.bash
 
 RUN rm -rf /tmp/downloaded_packages/ /tmp/*.rds
