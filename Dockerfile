@@ -1,7 +1,6 @@
 FROM us-central1-docker.pkg.dev/ucb-datahub-2018/base-images-repo/base-r-image:0d6b5ea
 
 USER root
-RUN apt-get update && apt-get install -y tini && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
 # System packages
@@ -10,9 +9,9 @@ RUN apt-get update && apt-get install -y tini && rm -rf /var/lib/apt/lists/*
 COPY apt.txt /tmp/apt.txt
 
 RUN apt-get update -qq && \
+    apt-get install -y tini && \
     apt-get install -y --no-install-recommends $(grep -v '^#' /tmp/apt.txt) && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/apt.txt
-
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY install.R /tmp/install.R
 RUN Rscript /tmp/install.R
