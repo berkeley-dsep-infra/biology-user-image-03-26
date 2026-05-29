@@ -8,6 +8,8 @@ USER root
 # Copy your new apt.txt
 COPY apt.txt /tmp/apt.txt
 
+RUN apt-get update -qq && apt-cache show htop && echo "LISTS OK"
+
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         tini \
