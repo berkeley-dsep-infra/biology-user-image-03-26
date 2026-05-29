@@ -10,7 +10,8 @@ COPY apt.txt /tmp/apt.txt
 
 RUN apt-get update -qq && \
     apt-get install -y tini && \
-    apt-get install -y --no-install-recommends $(grep -v '^#' /tmp/apt.txt) && \
+    apt-get install -y --no-install-recommends \
+        $(grep -v '^\s*#' /tmp/apt.txt | grep -v '^\s*$' | tr '\n' ' ') && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY install.R /tmp/install.R
