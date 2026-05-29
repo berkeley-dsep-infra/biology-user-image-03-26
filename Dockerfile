@@ -8,11 +8,11 @@ USER root
 # Copy your new apt.txt
 COPY apt.txt /tmp/apt.txt
 
-
-RUN apt-get update  && \
+RUN cat -A /tmp/apt.txt | head -5
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         tini \
-        $(grep -v '^\s*#' /tmp/apt.txt | grep -v '^\s*$' | tr '\n' ' ') && \
+        $(grep -v '^\s*#' /tmp/apt.txt | grep -v '^\s*$' | tr -d '\r' | tr '\n' ' ') && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/apt.txt
 
