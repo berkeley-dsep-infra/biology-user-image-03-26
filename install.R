@@ -59,7 +59,7 @@ if (length(bioc_to_install) > 0) {
   message("All Bioconductor packages already installed.")
 }
 
-# DH-757 - Installing PopGenome fto support IB 134L course
+# DH-757 - Install PopGenome package to support IB-134L course
 if (!requireNamespace("PopGenome", quietly = TRUE)) {
 message("Installing PopGenome")
 BiocManager::install("pievos101/PopGenome", ask = FALSE, update = FALSE)
