@@ -13,7 +13,7 @@ packages <- c(
   "seqinr",
   "hierfstat",
   "poppr",
-  "PopGenome",
+#  "PopGenome",
   "detectRUNS",
   "pwr",
   "mixtools",
@@ -57,4 +57,12 @@ if (length(bioc_to_install) > 0) {
   BiocManager::install(bioc_to_install, ask = FALSE, update = FALSE)
 } else {
   message("All Bioconductor packages already installed.")
+}
+
+# DH-757 - Installing PopGenome fto support IB 134L course
+if (!requireNamespace("PopGenome", quietly = TRUE)) {
+message("Installing PopGenome")
+BiocManager::install("pievos101/PopGenome", ask = FALSE, update = FALSE)
+} else {
+message("PopGenome is already installed.")
 }
