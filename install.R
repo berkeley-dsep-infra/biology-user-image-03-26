@@ -1,5 +1,9 @@
 #!/usr/bin/env Rscript
 
+# PPM snapshot already set in Rprofile.site, but restated here for
+# standalone reproducibility
+options(repos = c(CRAN = "https://packagemanager.posit.co/all/__linux__/noble/2026-05-11+Fksl5Ok_"))
+
 # renv and BiocManager are needed to install the packages below
 required_packages <- c("renv", "BiocManager")
 
@@ -42,4 +46,20 @@ packages <- c(
   "bioc::EnhancedVolcano"
 )
 
-   renv::install(packages)	
+failed_packages <- c()
+for (pkg in packages) {
+  tryCatch(
+    renv::install(pkg, prompt = FALSE),
+    error = function(e) {
+      cat(sprintf("WARNING: failed to install '%s': %s\n", pkg, conditionMessage(e)))
+      failed_packages <<- c(failed_packages, pkg)
+    }
+  )
+}
+
+if (length(failed_packages) > 0) {
+  stop(sprintf(
+    "Failed to install %d package(s): %s",
+    length(failed_packages), paste(failed_packages, collapse = ", ")
+  ))
+}
