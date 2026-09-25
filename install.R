@@ -4,8 +4,18 @@
 # standalone reproducibility
 options(repos = c(CRAN = "https://packagemanager.posit.co/all/__linux__/noble/2026-05-11+Fksl5Ok_"))
 
-# --- CRAN packages ---
+# renv and BiocManager are needed to install the packages below
+required_packages <- c("renv", "BiocManager")
+
+# Check and install required packages
+new_packages <- required_packages[!sapply(required_packages, requireNamespace, quietly = TRUE)]
+if (length(new_packages) > 0) {
+  install.packages(new_packages)
+}
+
+
 packages <- c(
+  # --- CRAN packages ---
   "adegenet",
   "pegas",
   "phytools",
@@ -13,48 +23,43 @@ packages <- c(
   "seqinr",
   "hierfstat",
   "poppr",
-  "PopGenome",
   "detectRUNS",
   "pwr",
   "mixtools",
   "mclust",
   "pheatmap",
   "phangorn",
-  "qqman"
+  "qqman",
+
+  # DH-757 - PopGenome is archived on CRAN; pin the last release for IB-134L
+  "PopGenome@2.7.5",
+
+  # --- Bioconductor packages ---
+  "bioc::EBSeq",
+  "bioc::Rhtslib",
+  "bioc::dada2",
+  "bioc::phyloseq",
+  "bioc::Biostrings",
+  "bioc::cummeRbund",
+  "bioc::DESeq2",
+  "bioc::apeglm",
+  "bioc::EnhancedVolcano"
 )
 
-to_install <- packages[!sapply(packages, requireNamespace, quietly = TRUE)]
-
-if (length(to_install) > 0) {
-  message("Installing CRAN packages: ", paste(to_install, collapse = ", "))
-  install.packages(to_install, dependencies = TRUE)
-} else {
-  message("All CRAN packages already installed.")
+failed_packages <- c()
+for (pkg in packages) {
+  tryCatch(
+    renv::install(pkg, prompt = FALSE),
+    error = function(e) {
+      cat(sprintf("WARNING: failed to install '%s': %s\n", pkg, conditionMessage(e)))
+      failed_packages <<- c(failed_packages, pkg)
+    }
+  )
 }
 
-# --- Bioconductor packages ---
-
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-  install.packages("BiocManager")
-}
-
-bioc_packages <- c(
-  "EBSeq",
-  "Rhtslib",
-  "dada2",
-  "phyloseq",
-  "Biostrings",
-  "cummeRbund",
-  "DESeq2",
-  "apeglm",
-  "EnhancedVolcano"
-)
-
-bioc_to_install <- bioc_packages[!sapply(bioc_packages, requireNamespace, quietly = TRUE)]
-
-if (length(bioc_to_install) > 0) {
-  message("Installing Bioconductor packages: ", paste(bioc_to_install, collapse = ", "))
-  BiocManager::install(bioc_to_install, ask = FALSE, update = FALSE)
-} else {
-  message("All Bioconductor packages already installed.")
+if (length(failed_packages) > 0) {
+  stop(sprintf(
+    "Failed to install %d package(s): %s",
+    length(failed_packages), paste(failed_packages, collapse = ", ")
+  ))
 }
