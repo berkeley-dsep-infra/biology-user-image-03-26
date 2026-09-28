@@ -56,10 +56,3 @@ for (pkg in packages) {
     }
   )
 }
-
-if (length(failed_packages) > 0) {
-  stop(sprintf(
-    "Failed to install %d package(s): %s",
-    length(failed_packages), paste(failed_packages, collapse = ", ")
-  ))
-}
